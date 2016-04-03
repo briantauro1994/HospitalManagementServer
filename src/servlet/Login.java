@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -17,8 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+
 import jsonDtos.LoginDto;
 import jsonDtos.StringDto;
+import service.LoginService;
 
 /**
  * Servlet implementation class Login
@@ -46,7 +51,7 @@ public class Login extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	
+	LoginService loginService;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	InputStream	inputStream = new BufferedInputStream(request.getInputStream());
 
@@ -55,12 +60,20 @@ public class Login extends HttpServlet {
 	       LoginDto login = new Gson().fromJson(json,LoginDto.class);
 	      
 	//	LoginDto login=new Gson().fromJson(json, LoginDto.class);
-		
-		
-		System.out.println(login.getName());
+    
+		loginService=new LoginService();
+System.out.println(login.getName());
 		
 		StringDto s=new StringDto();
-		s.setMessage(login.getName());
+		if(loginService.validateLogin(login)){
+		
+		s.setMessage(login.getName());}
+		else
+		{
+			s.setMessage("Failure");
+		}
+		
+		
 		 response.setContentType("application/json");
 	        response.setCharacterEncoding("UTF-8");
 	        response.getWriter().write(new Gson().toJson(s));
