@@ -17,16 +17,17 @@ import java.util.logging.Logger;
  * @author shalom
  */
 public class DbConnection {
-Connection con;
+static Connection con;
 private String connectionUrl = "jdbc:mysql://localhost:3306/HospitalDB";
 private String dbUser = "root";
 private String dbPwd = "root";
 public  Connection connect()
 {
     try {
+    	if(con==null){
         Class.forName("com.mysql.jdbc.Driver");
          con = DriverManager.getConnection (connectionUrl,dbUser,dbPwd);
- 
+    	}
       
         
     } catch (ClassNotFoundException ex) {

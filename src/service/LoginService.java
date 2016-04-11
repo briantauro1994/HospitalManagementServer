@@ -10,7 +10,7 @@ import servlet.Login;
 public class LoginService {
 
 	
-	public boolean validateLogin(LoginDto login)
+	public String validateLogin(LoginDto login)
 	{
 		
 
@@ -22,14 +22,14 @@ public class LoginService {
             pst.setString(2, login.getPassword());
             ResultSet rs = pst.executeQuery();                        
             if(rs.next())            
-                return true;    
+                return rs.getString("phoneno");    
                    
         }
         catch(Exception e){
             e.printStackTrace();
            
         }
-		return false;   
+		return "";   
 	}
 	
 }
