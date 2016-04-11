@@ -1,6 +1,10 @@
 package servlet;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.util.ArrayList;
 
@@ -13,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 import jsonDtos.DoctorMessageDto;
+import jsonDtos.PatientDto;
+import jsonDtos.StringDto;
 import service.DoctorService;
 
 
@@ -36,25 +42,47 @@ public class ViewDoctorsList extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		System.out.println("get");
+	/*	System.out.println("get");
 		DoctorService doctorService=new DoctorService();
 		ArrayList<DoctorMessageDto> doctorMessageDto=doctorService.getdoctorlist();
 		response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new Gson().toJson(doctorMessageDto));
+*/
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		InputStream	inputStream = new BufferedInputStream(request.getInputStream());
+		 
+	     String json = convertInputStreamToString(inputStream);
+	     StringDto patientDto = new Gson().fromJson(json,StringDto.class);
 		DoctorService doctorService=new DoctorService();
-		ArrayList<DoctorMessageDto> doctorMessageDto=doctorService.getdoctorlist();
+		ArrayList<DoctorMessageDto> doctorMessageDto=doctorService.getdoctorlist(patientDto);
 		response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(new Gson().toJson(doctorMessageDto));
 		   
 	}
+	private String convertInputStreamToString(InputStream inputStream) throws IOException {
+
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+
+        String line = "";
+        String result = "";
+
+        while((line = bufferedReader.readLine()) != null){
+            result += line;
+        }
+
+            /* Close Stream */
+        if(null!=inputStream){
+            inputStream.close();
+        }
+
+        return result;
+    }
 
 }

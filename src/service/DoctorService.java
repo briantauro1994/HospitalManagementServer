@@ -122,13 +122,13 @@ public class DoctorService {
 
 	}
 
-	public ArrayList<DoctorMessageDto> getdoctorlist() {
+	public ArrayList<DoctorMessageDto> getdoctorlist(StringDto stringDto) {
 		ArrayList<DoctorMessageDto> doctorMessageDtos = new ArrayList<DoctorMessageDto>();
 		DoctorMessageDto doctorMessageDto = null;
 		try {
 
 			Connection conn = new dbconnection.DbConnection().connect();
-			PreparedStatement pst = conn.prepareStatement("Select * from doctors");
+			PreparedStatement pst = conn.prepareStatement("Select * from doctors where phoneno!="+stringDto.getMessage());
 
 			ResultSet rs = pst.executeQuery();
 			while (rs.next()) {
